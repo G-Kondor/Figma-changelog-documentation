@@ -76,6 +76,7 @@
     justify-content: center;
     position: relative;
     padding: 0 20px;
+    gap: 10px;
   }
 
   .tab-list {
@@ -84,7 +85,7 @@
     background: var(--bg-secondary);
     border-radius: var(--radius-pill);
     padding: 2.5px;
-    width: 320px;
+    width: 258px;
   }
 
   .tab-button {
@@ -121,8 +122,7 @@
   }
 
   .settings-btn {
-    position: absolute;
-    right: 20px;
+    flex-shrink: 0;
     background: none;
     border: none;
     cursor: pointer;
@@ -282,7 +282,8 @@
 
   /* ─── Preview Box ────────────────────────────────────────────────── */
   .preview-box {
-    background: var(--bg-secondary);
+    background: #070709;
+    border: 1px solid #5f686f;
     border-radius: var(--radius-sm);
     padding: 10px;
     display: flex;
@@ -710,22 +711,38 @@
       var pageId = urlMatch[2];
       var authHeader = 'Basic ' + btoa(email + ':' + apiKey);
 
-      var apiUrl = baseUrl + '/wiki/api/v2/pages/' + pageId;
-      console.log('[Confluence] Fetching:', apiUrl);
+      // Route through local CORS proxy to bypass data: URI CORS restrictions in dev mode
+      var PROXY = 'http://localhost:3001/proxy/';
+      var v2Url = baseUrl + '/wiki/api/v2/pages/' + pageId;
+      console.log('[Confluence] Fetching via proxy:', v2Url);
       console.log('[Confluence] Auth email:', email);
       console.log('[Confluence] Base URL:', baseUrl, '| Page ID:', pageId);
 
-      // First, get the current page to obtain the version number
-      var getResponse = await fetch(apiUrl, {
-        headers: {
-          'Authorization': authHeader,
-          'Accept': 'application/json',
-        }
+      // Try published page first, then draft, then v1 API
+      var getResponse = await fetch(PROXY + encodeURIComponent(v2Url), {
+        headers: { 'Authorization': authHeader, 'Accept': 'application/json' }
       });
+
+      // If 404, try as draft
+      if (getResponse.status === 404) {
+        console.log('[Confluence] Page not found, trying draft status...');
+        getResponse = await fetch(PROXY + encodeURIComponent(v2Url + '?status=draft'), {
+          headers: { 'Authorization': authHeader, 'Accept': 'application/json' }
+        });
+      }
+
+      // If still 404, try v1 API
+      if (getResponse.status === 404) {
+        console.log('[Confluence] Draft not found, trying v1 API...');
+        var v1Url = baseUrl + '/wiki/rest/api/content/' + pageId + '?expand=version,body.storage';
+        getResponse = await fetch(PROXY + encodeURIComponent(v1Url), {
+          headers: { 'Authorization': authHeader, 'Accept': 'application/json' }
+        });
+      }
 
       if (!getResponse.ok) {
         var errText = await getResponse.text();
-        throw new Error('Failed to read page (' + getResponse.status + '): ' + errText);
+        throw new Error('Page not found (' + getResponse.status + '). Make sure the page is published in Confluence, not just a draft.');
       }
 
       var pageData = await getResponse.json();
@@ -737,7 +754,8 @@
 
       // Update the page
       console.log('[Confluence] Updating page:', pageTitle, 'v' + (currentVersion + 1));
-      var updateResponse = await fetch(apiUrl, {
+      var updateUrl = PROXY + encodeURIComponent(v2Url);
+      var updateResponse = await fetch(updateUrl, {
         method: 'PUT',
         headers: {
           'Authorization': authHeader,
