@@ -1,0 +1,19 @@
+{
+  "name": "changelog-documentation-plugin",
+  "version": "0.1.0",
+  "description": "Figma plugin for automated changelog generation, Confluence publishing, and announcement creation",
+  "scripts": {
+    "build": "npm run build:code && npm run build:ui",
+    "build:code": "esbuild src/code.ts --bundle --outfile=code.js --target=es2020 --format=esm",
+    "build:ui": "esbuild src/ui.ts --bundle --outfile=ui-bundle.js --target=es2020 --format=iife && node scripts/build-ui.js",
+    "watch": "concurrently \"npm run watch:code\" \"npm run watch:ui\"",
+    "watch:code": "esbuild src/code.ts --bundle --outfile=code.js --target=es2020 --format=esm --watch",
+    "watch:ui": "esbuild src/ui.ts --bundle --outfile=ui-bundle.js --target=es2020 --format=iife --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.0",
+    "concurrently": "^8.2.0",
+    "typescript": "^5.4.0",
+    "@figma/plugin-typings": "^1.100.0"
+  }
+}

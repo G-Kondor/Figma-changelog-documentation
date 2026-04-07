@@ -1,0 +1,17 @@
+{
+  "name": "Changelog & documentation",
+  "id": "changelog-documentation-plugin",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma", "dev"],
+  "capabilities": ["inspect"],
+  "permissions": ["teamlibrary"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": [
+      "https://gergokondor.atlassian.net"
+    ],
+    "reasoning": "Connects to Confluence REST API for publishing changelogs."
+  }
+}

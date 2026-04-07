@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  /* ─── Reset & Base ───────────────────────────────────────────────── */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @font-face {
+    font-family: 'DM Mono';
+    src: local('DM Mono Medium'), local('DMMono-Medium');
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'DM Mono';
+    src: local('DM Mono Regular'), local('DMMono-Regular');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  :root {
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #3c3c3b;
+    --bg-button: #5f686f;
+    --border-primary: #515151;
+    --border-input: #aaafb1;
+    --border-button: #4b4b4b;
+    --text-primary: #ffffff;
+    --text-secondary: #8699a9;
+    --font-mono: 'DM Mono', 'SF Mono', 'Fira Code', monospace;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-pill: 10px;
+  }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 14px;
+    overflow-x: hidden;
+  }
+
+  /* ─── Layout ─────────────────────────────────────────────────────── */
+  .plugin-container {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* ─── Tab Bar ────────────────────────────────────────────────────── */
+  .tab-bar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    padding: 0 20px;
+  }
+
+  .tab-list {
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-pill);
+    padding: 2.5px;
+    width: 258px;
+  }
+
+  .tab-button {
+    flex: 1;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    border: 0.8px solid transparent;
+    background: none;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 500;
+    letter-spacing: -0.014px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    line-height: 11px;
+  }
+
+  .tab-button.active {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--bg-secondary);
+    box-shadow:
+      0px 4px 4px rgba(91,91,92,0.1),
+      0px 6px 6px rgba(79,78,78,0.12),
+      0px 3px 9px rgba(58,58,58,0.08);
+  }
+
+  .tab-button:hover:not(.active) {
+    color: var(--text-primary);
+  }
+
+  .settings-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+  }
+
+  .settings-btn:hover {
+    opacity: 1;
+  }
+
+  .settings-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--text-secondary);
+  }
+
+  /* ─── Tab Content ────────────────────────────────────────────────── */
+  .tab-content {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 20px 20px;
+  }
+
+  .tab-content.active {
+    display: flex;
+  }
+
+  /* ─── Section Headers ────────────────────────────────────────────── */
+  .section-label {
+    font-size: 9.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.014px;
+    line-height: 14px;
+    text-transform: uppercase;
+  }
+
+  .section-desc {
+    font-size: 9.5px;
+    font-weight: 400;
+    color: var(--text-primary);
+    letter-spacing: -0.014px;
+    line-height: 14px;
+    max-width: 226px;
+  }
+
+  /* ─── Select / Dropdown ──────────────────────────────────────────── */
+  .select-wrapper {
+    position: relative;
+    width: 70px;
+  }
+
+  .select-field {
+    width: 100%;
+    height: 26px;
+    background: transparent;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    padding: 4px 22px 4px 6px;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .select-field:focus {
+    border-color: var(--text-primary);
+  }
+
+  .select-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--text-primary);
+    pointer-events: none;
+  }
+
+  /* ─── Button ─────────────────────────────────────────────────────── */
+  .btn-primary {
+    width: 100%;
+    height: 36px;
+    background: var(--bg-button);
+    border: 1px solid var(--border-button);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    box-shadow: 0px 1px 2px rgba(10,13,18,0.05);
+    line-height: 20px;
+  }
+
+  .btn-primary:hover {
+    background: #6b747b;
+  }
+
+  .btn-primary:active {
+    background: #535b61;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* ─── Input Fields ───────────────────────────────────────────────── */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-label {
+    font-size: 9.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.014px;
+    line-height: 14px;
+  }
+
+  .field-input {
+    width: 100%;
+    height: 26px;
+    background: transparent;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    padding: 4px 6px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .field-input:focus {
+    border-color: var(--text-primary);
+  }
+
+  /* ─── Preview Box ────────────────────────────────────────────────── */
+  .preview-box {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .preview-label {
+    font-size: 9.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.014px;
+    line-height: 14px;
+  }
+
+  .copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+
+  .copy-btn:hover {
+    opacity: 1;
+  }
+
+  .copy-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--text-secondary);
+  }
+
+  .preview-content {
+    font-size: 9.5px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: -0.014px;
+    line-height: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .preview-content::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .preview-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .preview-content::-webkit-scrollbar-thumb {
+    background: #515151;
+    border-radius: 2px;
+  }
+
+  /* ─── Settings Overlay ───────────────────────────────────────────── */
+  .settings-overlay {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 20px 20px;
+  }
+
+  .settings-overlay.active {
+    display: flex;
+  }
+
+  /* ─── Toast ──────────────────────────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: #2d2d2d;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    padding: 6px 12px;
+    opacity: 0;
+    transition: all 0.25s ease;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ─── Loading ────────────────────────────────────────────────────── */
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--text-secondary);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ─── Char Counter ───────────────────────────────────────────────── */
+  .char-counter {
+    font-size: 9px;
+    color: var(--text-secondary);
+    text-align: right;
+    margin-top: -6px;
+  }
+
+  .char-counter.over-limit {
+    color: #f87171;
+  }
+</style>
+</head>
+<body>
+  <div class="plugin-container">
+
+    <!-- ── Tab Bar ──────────────────────────────────────────────── -->
+    <div class="tab-bar-wrapper">
+      <div class="tab-list">
+        <button class="tab-button active" data-tab="scan">Scan</button>
+        <button class="tab-button" data-tab="publish">Publish</button>
+        <button class="tab-button" data-tab="announcement">Announcement</button>
+      </div>
+      <button class="settings-btn" id="settingsToggle" title="Settings">
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.325 1.635a1.65 1.65 0 013.35 0l.1.63a1.65 1.65 0 002.27.96l.56-.31a1.65 1.65 0 012.33 1.675l-.06.63a1.65 1.65 0 001.53 1.78l.63.06a1.65 1.65 0 011.18 2.67l-.38.5a1.65 1.65 0 00.19 2.27l.5.38a1.65 1.65 0 01-.36 2.87l-.6.22a1.65 1.65 0 00-1.04 2.04l.22.6a1.65 1.65 0 01-1.74 2.22l-.63-.1a1.65 1.65 0 00-1.82 1.18l-.2.61a1.65 1.65 0 01-2.86.42l-.39-.49a1.65 1.65 0 00-2.27-.19l-.5.38a1.65 1.65 0 01-2.67-1.18l-.06-.63a1.65 1.65 0 00-1.78-1.53l-.63.06a1.65 1.65 0 01-1.68-2.33l.31-.56a1.65 1.65 0 00-.96-2.27l-.63-.1a1.65 1.65 0 010-3.35l.63-.1a1.65 1.65 0 00.96-2.27l-.31-.56a1.65 1.65 0 011.675-2.33l.63.06a1.65 1.65 0 001.53-1.78l-.06-.63a1.65 1.65 0 012.33-1.18l.56.31a1.65 1.65 0 002.27-.96l.1-.63zM10 13a3 3 0 100-6 3 3 0 000 6z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── Scan Tab ─────────────────────────────────────────────── -->
+    <div class="tab-content active" id="tab-scan">
+      <p class="section-label">Node changes &amp; changelog</p>
+      <p class="section-desc">Read the most recent node-level changes and create change log entries</p>
+
+      <div class="select-wrapper">
+        <select class="select-field" id="daysSelect">
+          <option value="7">7 days</option>
+          <option value="5">5 days</option>
+          <option value="1">1 day</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" id="scanBtn">Scan pages</button>
+
+      <div class="preview-box" id="scanPreview" style="display: none;">
+        <div class="preview-header">
+          <span class="preview-label">Preview</span>
+          <button class="copy-btn" id="copyScan" title="Copy to clipboard">
+            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 3a1 1 0 00-1 1v1H5a2 2 0 00-2 2v9a2 2 0 002 2h6a2 2 0 002-2v-1h1a2 2 0 002-2V5.414A2 2 0 0015.414 4L14 2.586A2 2 0 0012.586 2H9a2 2 0 00-2 2v1zm4 0a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h1v5a2 2 0 002 2h3V4zm-2 0h3.586L14 4.414V11a1 1 0 01-1 1H9V4a1 1 0 011-1z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+        <div class="preview-content" id="scanContent"></div>
+      </div>
+    </div>
+
+    <!-- ── Publish Tab ──────────────────────────────────────────── -->
+    <div class="tab-content" id="tab-publish">
+      <div class="field-group">
+        <label class="field-label">Confluence URL</label>
+        <input class="field-input" type="url" id="confluenceUrl" placeholder="https://your-site.atlassian.net/wiki/..." />
+      </div>
+
+      <button class="btn-primary" id="publishBtn">Publish to confluence</button>
+
+      <div class="preview-box" id="publishPreview">
+        <div class="preview-header">
+          <span class="preview-label" id="publishInfo">All change log entry from the last 7 days will be published to your confluence page.</span>
+          <button class="copy-btn" id="copyPublish" title="Copy to clipboard">
+            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 3a1 1 0 00-1 1v1H5a2 2 0 00-2 2v9a2 2 0 002 2h6a2 2 0 002-2v-1h1a2 2 0 002-2V5.414A2 2 0 0015.414 4L14 2.586A2 2 0 0012.586 2H9a2 2 0 00-2 2v1zm4 0a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h1v5a2 2 0 002 2h3V4zm-2 0h3.586L14 4.414V11a1 1 0 01-1 1H9V4a1 1 0 011-1z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+        <div class="preview-content" id="publishContent">No scan data yet. Go to Scan tab first.</div>
+      </div>
+    </div>
+
+    <!-- ── Announcement Tab ─────────────────────────────────────── -->
+    <div class="tab-content" id="tab-announcement">
+      <p class="section-label">Announcement post</p>
+      <p class="section-desc">Auto-generate a short announcement post highlighting top updates with emojis</p>
+
+      <button class="btn-primary" id="announcementBtn">Generate announcement</button>
+
+      <div class="preview-box" id="announcementPreview" style="display: none;">
+        <div class="preview-header">
+          <span class="preview-label">Announcement</span>
+          <button class="copy-btn" id="copyAnnouncement" title="Copy to clipboard">
+            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 3a1 1 0 00-1 1v1H5a2 2 0 00-2 2v9a2 2 0 002 2h6a2 2 0 002-2v-1h1a2 2 0 002-2V5.414A2 2 0 0015.414 4L14 2.586A2 2 0 0012.586 2H9a2 2 0 00-2 2v1zm4 0a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h1v5a2 2 0 002 2h3V4zm-2 0h3.586L14 4.414V11a1 1 0 01-1 1H9V4a1 1 0 011-1z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+        <div class="preview-content" id="announcementContent"></div>
+        <div class="char-counter" id="charCounter"></div>
+      </div>
+    </div>
+
+    <!-- ── Settings Overlay ─────────────────────────────────────── -->
+    <div class="settings-overlay" id="settingsPanel">
+      <div class="field-group">
+        <label class="field-label">Email</label>
+        <input class="field-input" type="email" id="settingsEmail" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Anthropic API key</label>
+        <input class="field-input" type="password" id="settingsAnthropic" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Confluence API key</label>
+        <input class="field-input" type="password" id="settingsConfluence" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Figma access token</label>
+        <input class="field-input" type="password" id="settingsFigma" />
+      </div>
+
+      <button class="btn-primary" id="saveKeysBtn">Save keys</button>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- SCRIPT_PLACEHOLDER -->
+</body>
+</html>
