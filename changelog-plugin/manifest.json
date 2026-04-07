@@ -10,8 +10,9 @@
   "documentAccess": "dynamic-page",
   "networkAccess": {
     "allowedDomains": [
-      "https://gergokondor.atlassian.net"
+      "https://gergokondor.atlassian.net",
+      "http://localhost:3001"
     ],
-    "reasoning": "Connects to Confluence REST API for publishing changelogs."
+    "reasoning": "Connects to Confluence REST API for publishing changelogs. Localhost proxy used during development to bypass CORS."
   }
 }
