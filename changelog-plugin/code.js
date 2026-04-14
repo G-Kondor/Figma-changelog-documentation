@@ -228,6 +228,7 @@ figma.ui.onmessage = async function(msg) {
           email: email,
           confluenceKey: confluenceKey,
           entries: msg.entries,
+          fileName: figma.root.name,
         });
       } catch (error) {
         figma.ui.postMessage({
