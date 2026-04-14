@@ -35,13 +35,17 @@
     --radius-pill: 10px;
   }
 
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
   body {
     background: var(--bg-primary);
     color: var(--text-primary);
     font-family: var(--font-mono);
     font-size: 11px;
     line-height: 14px;
-    overflow-x: hidden;
   }
 
   /* ─── Layout ─────────────────────────────────────────────────────── */
@@ -50,79 +54,21 @@
     flex-direction: column;
     gap: 19px;
     width: 100%;
-    padding-bottom: 20px;
+    height: 100%;
+    overflow: hidden;
   }
 
-  /* ─── Logo ────────────────────────────────────────────────────────── */
-  .logo-wrapper {
+  /* ─── Settings Row ────────────────────────────────────────────────── */
+  .settings-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 20px 20px 0;
-  }
-
-  .logo-icon {
-    width: 22px;
+    justify-content: flex-end;
     height: 22px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #6b7a8a, #3c4a56 50%, #1e2a34 100%);
-    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.15);
-  }
-
-  /* ─── Tab Bar ────────────────────────────────────────────────────── */
-  .tab-bar-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
     padding: 0 20px;
-    gap: 10px;
-  }
-
-  .tab-list {
-    display: flex;
-    align-items: center;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-pill);
-    padding: 2.5px;
-    width: 258px;
-  }
-
-  .tab-button {
-    flex: 1;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 9px;
-    border: 0.8px solid transparent;
-    background: none;
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: -0.014px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    line-height: 11px;
-  }
-
-  .tab-button.active {
-    background: #111114;
-    color: var(--text-primary);
-    border-color: var(--bg-secondary);
-    box-shadow:
-      0px 4px 4px rgba(91,91,92,0.1),
-      0px 6px 6px rgba(79,78,78,0.12),
-      0px 3px 9px rgba(58,58,58,0.08);
-  }
-
-  .tab-button:hover:not(.active) {
-    color: var(--text-primary);
+    margin-top: 20px;
   }
 
   .settings-btn {
-    flex-shrink: 0;
     background: none;
     border: none;
     cursor: pointer;
@@ -142,21 +88,88 @@
     height: 16px;
   }
 
+  /* ─── Tab Bar ────────────────────────────────────────────────────── */
+  .tab-bar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+  }
+
+  .tab-list {
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-pill);
+    padding: 3px;
+    width: 340px;
+  }
+
+  .tab-button {
+    flex: 1;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    border: 0.8px solid transparent;
+    background: none;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.014px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    line-height: 14px;
+    padding: 4px 10px;
+  }
+
+  .tab-button.active {
+    background: #111114;
+    color: var(--text-primary);
+    border-color: var(--bg-secondary);
+    box-shadow:
+      0px 4px 4px rgba(91,91,92,0.1),
+      0px 6px 6px rgba(79,78,78,0.12),
+      0px 3px 9px rgba(58,58,58,0.08);
+  }
+
+  .tab-button:hover:not(.active) {
+    color: var(--text-primary);
+  }
+
   /* ─── Tab Content ────────────────────────────────────────────────── */
   .tab-content {
     display: none;
     flex-direction: column;
     gap: 12px;
-    padding: 0 20px;
+    padding: 0 20px 20px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
   }
 
   .tab-content.active {
     display: flex;
   }
 
+  .tab-content::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .tab-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .tab-content::-webkit-scrollbar-thumb {
+    background: #515151;
+    border-radius: 2px;
+  }
+
   /* ─── Section Headers ────────────────────────────────────────────── */
   .section-label {
-    font-size: 9.5px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
     letter-spacing: -0.014px;
@@ -165,7 +178,7 @@
   }
 
   .section-desc {
-    font-size: 9.5px;
+    font-size: 12px;
     font-weight: 400;
     color: var(--text-primary);
     letter-spacing: -0.014px;
@@ -187,7 +200,7 @@
     border-radius: var(--radius-sm);
     color: var(--text-primary);
     font-family: var(--font-mono);
-    font-size: 9.5px;
+    font-size: 12px;
     padding: 4px 22px 4px 6px;
     appearance: none;
     cursor: pointer;
@@ -220,7 +233,9 @@
   /* ─── Button ─────────────────────────────────────────────────────── */
   .btn-primary {
     width: 100%;
+    min-height: 36px;
     height: 36px;
+    flex-shrink: 0;
     background: var(--bg-button);
     border: 1px solid var(--border-button);
     border-radius: var(--radius-md);
@@ -255,7 +270,7 @@
   }
 
   .field-label {
-    font-size: 9.5px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
     letter-spacing: -0.014px;
@@ -270,7 +285,7 @@
     border-radius: var(--radius-sm);
     color: var(--text-primary);
     font-family: var(--font-mono);
-    font-size: 9.5px;
+    font-size: 12px;
     padding: 4px 6px;
     outline: none;
     transition: border-color 0.15s;
@@ -299,7 +314,7 @@
   }
 
   .preview-label {
-    font-size: 9.5px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
     letter-spacing: -0.014px;
@@ -311,16 +326,16 @@
     background: none;
     border: none;
     cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.15s;
+    transition: color 0.15s;
     display: flex;
     align-items: center;
     padding: 0;
     flex-shrink: 0;
+    color: #8699a9;
   }
 
   .copy-btn:hover {
-    opacity: 1;
+    color: #a3b4c2;
   }
 
   .copy-btn svg {
@@ -329,7 +344,7 @@
   }
 
   .preview-content {
-    font-size: 9.5px;
+    font-size: 12px;
     font-weight: 400;
     color: var(--text-secondary);
     letter-spacing: -0.014px;
@@ -358,7 +373,10 @@
     display: none;
     flex-direction: column;
     gap: 12px;
-    padding: 0 20px;
+    padding: 0 20px 20px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
   }
 
   .settings-overlay.active {
@@ -376,7 +394,7 @@
     border-radius: var(--radius-sm);
     color: var(--text-primary);
     font-family: var(--font-mono);
-    font-size: 9.5px;
+    font-size: 12px;
     padding: 6px 12px;
     opacity: 0;
     transition: all 0.25s ease;
@@ -408,7 +426,7 @@
 
   /* ─── Char Counter ───────────────────────────────────────────────── */
   .char-counter {
-    font-size: 9px;
+    font-size: 12px;
     color: var(--text-secondary);
     text-align: right;
     margin-top: -6px;
@@ -422,9 +440,11 @@
 <body>
   <div class="plugin-container">
 
-    <!-- ── Logo ───────────────────────────────────────────────── -->
-    <div class="logo-wrapper">
-      <div class="logo-icon"></div>
+    <!-- ── Settings Row ──────────────────────────────────────────── -->
+    <div class="settings-row">
+      <button class="settings-btn" id="settingsToggle" title="Settings">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z" fill="currentColor"/></svg>
+      </button>
     </div>
 
     <!-- ── Tab Bar ──────────────────────────────────────────────── -->
@@ -434,9 +454,6 @@
         <button class="tab-button" data-tab="publish">Publish</button>
         <button class="tab-button" data-tab="announcement">Announcement</button>
       </div>
-      <button class="settings-btn" id="settingsToggle" title="Settings">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z" fill="currentColor"/></svg>
-      </button>
     </div>
 
     <!-- ── Scan Tab ─────────────────────────────────────────────── -->
@@ -448,6 +465,7 @@
         <select class="select-field" id="daysSelect">
           <option value="7">7 days</option>
           <option value="5">5 days</option>
+          <option value="3">3 days</option>
           <option value="1">1 day</option>
         </select>
       </div>
@@ -691,7 +709,7 @@
 
   // ─── Confluence Publisher ───────────────────────────────────────────────────
 
-  async function publishToConfluence(pageUrl, email, apiKey, formatted, entries) {
+  async function publishToConfluence(pageUrl, email, apiKey, formatted, entries, fileName) {
     try {
       // Extract base URL and page ID from various Confluence URL formats:
       // - https://site.atlassian.net/wiki/spaces/SPACE/pages/12345/Title
@@ -753,14 +771,17 @@
       }
 
       var pageData = await getResponse.json();
-      var currentVersion = pageData.version.number;
-      var pageTitle = pageData.title;
+      console.log('[Confluence] Page data:', JSON.stringify(pageData).substring(0, 500));
+      var currentVersion = pageData.version ? pageData.version.number : 1;
+      var pageTitle = pageData.title || ('Change log - ' + (fileName || 'Figma file'));
+      var pageStatus = pageData.status || 'current';
 
       // Build HTML content for Confluence
       var htmlContent = buildConfluenceHtml(entries, formatted);
 
-      // Update the page
-      console.log('[Confluence] Updating page:', pageTitle, 'v' + (currentVersion + 1));
+      // Update the page — drafts stay at version 1, published pages increment
+      var nextVersion = pageStatus === 'draft' ? 1 : currentVersion + 1;
+      console.log('[Confluence] Updating page:', pageTitle, 'status:', pageStatus, 'v' + nextVersion);
       var updateUrl = PROXY + encodeURIComponent(v2Url);
       var updateResponse = await fetch(updateUrl, {
         method: 'PUT',
@@ -771,14 +792,14 @@
         },
         body: JSON.stringify({
           id: pageId,
-          status: 'current',
+          status: pageStatus,
           title: pageTitle,
           body: {
             representation: 'storage',
             value: htmlContent,
           },
           version: {
-            number: currentVersion + 1,
+            number: nextVersion,
             message: 'Changelog update from Figma plugin',
           },
         }),
@@ -803,8 +824,7 @@
   }
 
   function buildConfluenceHtml(entries, formatted) {
-    var html = '<h2>Design System Changelog</h2>';
-    html += '<p><em>Updated: ' + new Date().toISOString().split('T')[0] + '</em></p>';
+    var html = '<p><em>Updated: ' + new Date().toISOString().split('T')[0] + '</em></p>';
 
     // Group by category
     var categories = ['Added', 'Updated', 'Fixed', 'Removed'];
@@ -905,7 +925,7 @@
 
       case 'PUBLISH_DATA':
         // Actually publish to Confluence via REST API
-        publishToConfluence(msg.confluenceUrl, msg.email, msg.confluenceKey, msg.formatted, msg.entries);
+        publishToConfluence(msg.confluenceUrl, msg.email, msg.confluenceKey, msg.formatted, msg.entries, msg.fileName);
         break;
 
       case 'ANNOUNCEMENT_RESULT':
